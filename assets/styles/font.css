@@ -1,4 +1,9 @@
 @font-face {
     font-family: arabic-nabi;
-    src: url(../fonts/arabic/Nabi.ttf);
+    src: url(@/assets/fonts/arabic/Nabi.ttf);
+}
+
+@font-face {
+    font-family: iranSans;
+    src: url(@/assets/fonts/farsi/IRANSansWebFaNum.ttf);
 }

@@ -10,9 +10,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^2.19.2",
+    "howler": "^2.2.4",
     "nuxt": "^3.14.1592",
     "sass": "^1.81.0",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@iconify-json/si": "^1.2.2"
   }
 }

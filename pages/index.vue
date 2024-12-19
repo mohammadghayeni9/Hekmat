@@ -4,8 +4,8 @@
 
 <template>
     <div class="home">
-        <NuxtLink class="home--item" to="/sahife-sajjadieh/1">صحیفه سجادیه</NuxtLink>
-        <NuxtLink class="home--item" to="/sahife-sajjadieh/1">نهج البلاغه</NuxtLink>
+        <NuxtLink class="home--item" to="/sahife-sajjadieh">صحیفه سجادیه</NuxtLink>
+        <NuxtLink class="home--item" to="/sahife-sajjadieh">نهج البلاغه</NuxtLink>
     </div>
 </template>
 
@@ -21,7 +21,7 @@
         padding: 20px 24px;
         text-align: center;
         text-decoration: none;
-        background-color: aquamarine;
+        background-color: var(--color-secondary);
     }
 }
 </style>

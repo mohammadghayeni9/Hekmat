@@ -1,0 +1,14 @@
+:root {
+    --color-primary: rgb(165, 182, 141);
+    --color-primary-25: rgb(165, 182, 141, 0.25);
+    --color-primary-50: rgb(165, 182, 141, 0.5);
+    --color-primary-75: rgb(165, 182, 141, 0.75);
+
+    --color-secondary: rgb(236, 223, 204);
+    --color-secondary-25: rgb(236, 223, 204, 0.25);
+    --color-secondary-50: rgb(236, 223, 204, 0.5);
+    --color-secondary-75: rgb(236, 223, 204, 0.75);
+
+    --color-btn-primary: rgb(218, 131, 89);
+    --color-btn-text-primary: rgb(252, 250, 238);
+}

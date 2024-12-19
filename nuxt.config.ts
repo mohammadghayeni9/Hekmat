@@ -8,4 +8,8 @@ export default defineNuxtConfig({
 			scrollBehaviorType: "smooth",
 		},
 	},
+	modules: ["@nuxt/ui"],
+	colorMode: {
+		preference: 'light'
+	}
 });
