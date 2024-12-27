@@ -77,7 +77,10 @@ const next = () => {
 	if (currentIndex.value < audioFiles.value.length - 1) {
 		currentIndex.value++;
 		play();
-	}
+	} else {
+        currentIndex.value = 0;
+        isPlaying.value = false;
+    }
 };
 
 const prev = () => {
@@ -100,14 +103,14 @@ onMounted(async () => {
 	<div class="audio-player">
 		<div class="audio-player__actions">
 			<div class="audio-player__actions__controls">
-                <UButton
+				<UButton
 					class="audio-player__actions__controls--small-btn"
 					icon="si:play-next-duotone"
 					size="sm"
 					square
 					variant="soft"
-					@click="prev"
-					:disabled="currentIndex === 0"
+                    @click="next"
+					:disabled="currentIndex === audioFiles.length - 1"
 				/>
 				<UButton
 					class="audio-player__actions__controls--btn"
@@ -133,21 +136,21 @@ onMounted(async () => {
 					size="sm"
 					square
 					variant="soft"
-					@click="next"
-					:disabled="currentIndex === audioFiles.length - 1"
+					@click="prev"
+					:disabled="currentIndex === 0"
 				/>
 			</div>
-            <USelectMenu
-                class="audio-player__actions--language"
+			<USelectMenu
+				class="audio-player__actions--language"
 				v-model="selectedLanguage"
 				:options="languageItmes"
 				value-attribute="value"
 				option-attribute="text"
 				@change="importAudioFilesAsync"
-                dir="rtl"
+				dir="rtl"
 			/>
 			<USelectMenu
-                class="audio-player__actions--speed"
+				class="audio-player__actions--speed"
 				v-model="selectedSpeed"
 				@change="changePlaybackRate"
 				:options="speedItems"
@@ -157,24 +160,26 @@ onMounted(async () => {
 			class="audio-player--progress"
 			color="primary"
 			:indicator="false"
-			:max="audioFilesCount"
+			:max="audioFilesCount - 1"
 			:value="currentIndex"
-			dir="ltr"
 		/>
 		<audio ref="audio" @ended="onEnded"></audio>
 	</div>
 </template>
 
 <style lang="scss">
-progress {
-	color: var(--color-primary) !important;
+.audio-player {
+	progress {
+		color: var(--color-primary) !important;
+        direction: ltr;
+	}
 }
 </style>
 
 <style scoped lang="scss">
 .audio-player {
 	position: fixed;
-	bottom: 15px;
+	bottom: 10px;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -200,38 +205,28 @@ progress {
 		gap: 10px;
 		font-family: iranSans;
 
-        &--language {
-            max-width: 200px;
-        }
-
-        &--speed {
-            width: 80px;
-        }
-
 		&__controls {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-            gap: 6px;
-            
-            &--btn {
-                background-color: var(--color-btn-primary);
-                color: var(--color-btn-text-primary);
-                width: fit-content;
-                padding: 10px;
-                border-radius: 50%;
-            }
+			gap: 6px;
 
-            &--small-btn {
-                background-color: var(--color-btn-primary);
-                color: var(--color-btn-text-primary);
-                width: fit-content;
-                padding: 5px;
-                border-radius: 50%;
-            
-            }
+			&--btn {
+				background-color: var(--color-btn-primary);
+				color: var(--color-btn-text-primary);
+				width: fit-content;
+				padding: 10px;
+				border-radius: 50%;
+			}
+
+			&--small-btn {
+				background-color: var(--color-btn-primary);
+				color: var(--color-btn-text-primary);
+				width: fit-content;
+				padding: 5px;
+				border-radius: 50%;
+			}
 		}
-
 	}
 }
 </style>

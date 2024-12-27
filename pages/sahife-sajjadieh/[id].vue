@@ -43,7 +43,7 @@ const select = (id) => {
 
 	&__header {
 		position: fixed;
-		top: 15px;
+		top: 10px;
 		left: 0;
 		right: 0;
 		margin: auto;
