@@ -1,5 +1,4 @@
 <script setup>
-import DuaMenuPlayer from "~/components/menu/duaMenuPlayer.vue";
 import AudioPlayer from "~/components/menu/AudioPlayer.vue";
 import sahife_1 from "../assets/text/sahifeh/1/sahife_1.json";
 import sahife_translate_1 from "../assets/text/sahifeh/translate/1/sahife_translate_1.json";
@@ -7,7 +6,9 @@ import sahife_translate_1 from "../assets/text/sahifeh/translate/1/sahife_transl
 const texts = sahife_1.map((text) => text.text);
 const translateTexts = sahife_translate_1.map((text) => text.text);
 
-const audioFilesCountComputed = computed(() => texts?.length)
+const audioFilesPathComputed = computed(() => sahife_1.map((item) => item.audioUrl));
+console.log(audioFilesPathComputed)
+const audioTranslateFilesPathComputed = computed(() => sahife_translate_1.map((item) => item.audioUrl));
 
 const select = (id) => {
 	const element = document.getElementById(id);
@@ -29,7 +30,7 @@ const select = (id) => {
 			<div class="sahife-sajjadieh-dua__text-wrapper__translate-text">{{ translateTexts[index] }}</div>
 		</div>
 	</div>
-	<AudioPlayer baseDirectory="https://hekmat.aghasizadehrc.ir/musics/sahifeh/" :audioFilesCount="audioFilesCountComputed" />
+	<AudioPlayer :audioFilesPath="audioFilesPathComputed" :audioTranslateFilesPath="audioTranslateFilesPathComputed" />
 </template>
 
 <style scoped lang="scss">

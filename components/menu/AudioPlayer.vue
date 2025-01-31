@@ -1,25 +1,18 @@
 <script setup>
 import { ref, computed } from "vue";
 const props = defineProps({
-	baseDirectory: {
-		type: String,
+	audioFilesPath: {
+		type: Array,
 		Required: true,
 	},
-	audioFilesCount: {
-		type: Number,
+	audioTranslateFilesPath: {
+		type: Array,
+		Required: true,
 	},
 });
 
-const { baseDirectory, audioFilesCount } = toRefs(props);
-const toast = useToast();
-const route = useRoute();
-const folder = computed(() => {
-	if (selectedLanguage.value == 1) {
-		return route.params.id + "/";
-	} else {
-		return "translate/" + route.params.id + "/";
-	}
-});
+const { audioFilesPath, audioTranslateFilesPath } = toRefs(props);
+
 const languageItmes = [
 	{
 		text: "صوت عربی",
@@ -33,29 +26,63 @@ const languageItmes = [
 const selectedLanguage = ref(1);
 const speedItems = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 const selectedSpeed = ref(1);
+let audioFiles = ref([]);
+const base64AudioFiles = ref([]);
 
-const importAudioFilesAsync = async () => {
-	audioFiles.value.splice(0);
-	for (let index = 1; index <= audioFilesCount.value; index++) {
+const downloadAudioFilesAsync = async (language) => {
+	let audioFilesPathTemp;
+	if (language == 1) {
+		audioFilesPathTemp = audioFilesPath.value;
+		console.log(1)
+	} else {
+		audioFilesPathTemp = audioTranslateFilesPath.value;
+		console.log(2)
+	}
+	
+	for (let index = 0; index < audioFilesPathTemp?.length; index++) {
 		/* @vite-ignore */
-		let audio = baseDirectory.value + folder.value + index + ".mp3";
+		let audio = audioFilesPathTemp[index];
 		audioFiles.value.push(audio);
+
+		try {
+			console.log(audioFilesPathTemp[index])
+			const { data, error: fetchError } = await useFetch(audioFilesPathTemp[index], {
+				method: "GET",
+			});
+
+			if (fetchError.value) {
+				throw new Error(fetchError.value.message);
+			}
+			const blob = new Blob([data.value], { type: "audio/mp3" });
+
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				const base64data = reader.result;
+				base64AudioFiles.value[index] = base64data;
+			};
+			reader.onerror = () => {
+				throw new Error("خطا در خواندن فایل");
+			};
+
+			reader.readAsDataURL(blob);
+		} catch (err) {
+			console.log(err.message);
+		}
 	}
 };
-
-let audioFiles = ref([]);
 
 const currentIndex = ref(0);
 const isPlaying = ref(false);
 const audio = ref(null);
 
-const currentAudio = computed(() => audioFiles.value[currentIndex.value]);
+const currentAudio = computed(() => base64AudioFiles.value[currentIndex.value]);
 let selectedElement = ref(null);
 const play = () => {
 	if (selectedElement.value) {
 		selectedElement.value.classList.remove("selected");
 	}
 	audio.value.src = currentAudio.value;
+	audio.value.load();
 	audio.value.playbackRate = selectedSpeed.value;
 	selectedElement.value = document.getElementById(currentIndex.value);
 	selectedElement.value.classList.add("selected");
@@ -78,9 +105,9 @@ const next = () => {
 		currentIndex.value++;
 		play();
 	} else {
-        currentIndex.value = 0;
-        isPlaying.value = false;
-    }
+		currentIndex.value = 0;
+		isPlaying.value = false;
+	}
 };
 
 const prev = () => {
@@ -95,7 +122,7 @@ const changePlaybackRate = () => {
 };
 
 onMounted(async () => {
-	await importAudioFilesAsync();
+	await downloadAudioFilesAsync(selectedLanguage.value);
 });
 </script>
 
@@ -109,7 +136,7 @@ onMounted(async () => {
 					size="sm"
 					square
 					variant="soft"
-                    @click="next"
+					@click="next"
 					:disabled="currentIndex === audioFiles.length - 1"
 				/>
 				<UButton
@@ -146,7 +173,7 @@ onMounted(async () => {
 				:options="languageItmes"
 				value-attribute="value"
 				option-attribute="text"
-				@change="importAudioFilesAsync"
+				@change="downloadAudioFilesAsync(selectedLanguage)"
 				dir="rtl"
 			/>
 			<USelectMenu
@@ -160,7 +187,7 @@ onMounted(async () => {
 			class="audio-player--progress"
 			color="primary"
 			:indicator="false"
-			:max="audioFilesCount - 1"
+			:max="audioFilesPath?.length - 1"
 			:value="currentIndex"
 		/>
 		<audio ref="audio" @ended="onEnded"></audio>
@@ -171,7 +198,7 @@ onMounted(async () => {
 .audio-player {
 	progress {
 		color: var(--color-primary) !important;
-        direction: ltr;
+		direction: ltr;
 	}
 }
 </style>

@@ -8,8 +8,11 @@ export default defineNuxtConfig({
 			scrollBehaviorType: "smooth",
 		},
 	},
-	modules: ["@nuxt/ui"],
+	modules: ["@nuxt/ui", "@pinia/nuxt"],
+	pinia: {
+		storesDirs: ["./stores/**"],
+	},
 	colorMode: {
-		preference: 'light'
-	}
+		preference: "light",
+	},
 });
